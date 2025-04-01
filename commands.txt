@@ -1,72 +1,4 @@
-# downSample
-
-Workflow to downsample fastq or bam files. Can use a combination of differrent method, tools and parameters. Notes: 1) downsample method can choose between random and top_reads, the later can only applied to fastq inputs; 2) fastq downsample tools include seqtk, seqkit; bam downsample tools include samtools, picard; 3) for seqkit, samtools, picard, prefered parameter is downSampleRatio, as use downSampleReads resulting number of reads is not exact, and may include extra compute time
-
-## Overview
-
-## Dependencies
-
-* [seqtk 1.3](https://github.com/lh3/seqtk)
-* [seqkit 2.3.1](https://github.com/shenwei356/seqkit)
-* [picard 3.1.0](https://broadinstitute.github.io/picard/)
-* [samtools 1.16.1](https://github.com/samtools/samtools/releases/)
-
-
-## Usage
-
-### Cromwell
-```
-java -jar cromwell.jar run downSample.wdl --inputs inputs.json
-```
-
-### Inputs
-
-#### Required workflow parameters:
-Parameter|Value|Description
----|---|---
-`outputFileNamePrefix`|String|Prefix of output file name
-`downSampleTool`|String|the tool to be used in downsampling, a few options available
-`downSampleMethod`|String|choose between random/top_reads
-
-
-#### Optional workflow parameters:
-Parameter|Value|Default|Description
----|---|---|---
-`inputFastq`|fastqPair?|None|the input fastq file pair
-`inputBam`|bamFile?|None|the input bam and index
-`downSampleRatio`|Float?|None|given a ratio for downsampled reads
-`downSampleReads`|Int?|None|given a number of reads after down sample
-`randomSampleSeed`|Int?|None|the seed for random sampling
-`DoSorting`|Boolean|true|whether do sorting after downsample for bam file
-`createIndex`|Boolean|true|whether create index for downsampled bam
-`checkCoverage`|Boolean|false|whether check coverage for downsampled bam
-
-
-#### Optional task parameters:
-Parameter|Value|Default|Description
----|---|---|---
-`downSampleFastq.timeout`|Int|12|The hours until the task is killed
-`downSampleFastq.memory`|Int|24|The GB of memory provided to the task
-`downSampleFastq.threads`|Int|8|The number of threads the task has access to
-`downSampleFastq.modules`|String|"seqtk/1.3 seqkit/2.3.1"|The modules that will be loaded
-`downSampleBam.timeout`|Int|12|The hours until the task is killed
-`downSampleBam.memory`|Int|24|The GB of memory provided to the task
-`downSampleBam.threads`|Int|8|The number of threads the task has access to
-`downSampleBam.modules`|String|"samtools/1.16.1 picard/3.1.0"|The modules that will be loaded
-
-
-### Outputs
-
-Output | Type | Description | Labels
----|---|---|---
-`downSampledFastq1`|File?|Output downsampled fastq read1|vidarr_label: downSampledFastq1
-`downSampledFastq2`|File?|Output downsampled fastq read2|vidarr_label: downSampledFastq1
-`downSampledBam`|File?|Downsampled bam file|vidarr_label: downSampledBam
-`downSampledBai`|File?|Downsampled bam file index|vidarr_label: downSampledBai
-
-
 ## Commands
-
 This section lists command(s) run by downSample workflow
 
 * Running downSample
@@ -199,9 +131,3 @@ This section lists command(s) run by downSample workflow
             mv ~{outputFileNamePrefix}.downsampled.bai ~{outputFileNamePrefix}.downsampled.bam.bai
         fi
 ```
-
- ## Support
-
-For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
-
-_Generated with generate-markdown-readme (https://github.com/oicr-gsi/gsi-wdl-tools/)_

@@ -67,6 +67,47 @@ workflow downSample {
                 checkCoverage = checkCoverage
         }
     }
+    meta {
+        author: "Gavin Peng"
+        email: "gpeng@oicr.on.ca"
+        description: "Workflow to downsample fastq or bam files. Can use a combination of differrent method, tools and parameters. Notes: 1) downsample method can choose between random and top_reads, the later can only applied to fastq inputs; 2) fastq downsample tools include seqtk, seqkit; bam downsample tools include samtools, picard; 3) for seqkit, samtools, picard, prefered parameter is downSampleRatio, as use downSampleReads resulting number of reads is not exact, and may include extra compute time"
+        dependencies: [
+        {
+            name: "seqtk/1.3",
+            url: "https://github.com/lh3/seqtk"
+        },
+        {
+            name: "seqkit/2.3.1",
+            url: "https://github.com/shenwei356/seqkit"
+        },
+        {
+            name: "picard/3.1.0",
+            url: "https://broadinstitute.github.io/picard/"
+        },
+        { 
+          name: "samtools/1.16.1",
+          url: "https://github.com/samtools/samtools/releases/"
+        }
+      ]
+      output_meta: {
+        downSampledFastq1: {
+            description: "Output downsampled fastq read1",
+            vidarr_label: "downSampledFastq1"
+        },
+        downSampledFastq2: {
+            description: "Output downsampled fastq read2",
+            vidarr_label: "downSampledFastq1"
+        },
+        downSampledBam: {
+            description: "Downsampled bam file",
+            vidarr_label: "downSampledBam"
+        },
+        downSampledBai: {
+            description: "Downsampled bam file index",
+            vidarr_label: "downSampledBai"
+        }
+      }
+    }
     output {
         File? downSampledFastq1 = downSampleFastq.downSampledFastq1
         File? downSampledFastq2 = downSampleFastq.downSampledFastq2
@@ -105,7 +146,7 @@ task downSampleFastq {
         threads: "The number of threads the task has access to"
         modules: "The modules that will be loaded"
     }
-    String output_suffix = if (sub(basename(fastq1), ".*\\.gz$", "") != basename(fastq1)) then "fq.gz" else "fq"
+    String output_suffix = if (sub(basename(fastq1), ".*\\.gz$", "") != basename(fastq1)) then "fastq.gz" else "fastq"
 
     command <<<
         valid_downSampleTool=("seqtk/1.3" "seqkit/2.3.1")
@@ -127,8 +168,14 @@ task downSampleFastq {
 
         if [ ~{downSampleMethod} = "top_reads" ]; then
             if [ ~{downSampleReads} -ne 0 ]; then
-                head -n $((4 * ~{downSampleReads}))   ~{fastq1}  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
-                head -n $((4 * ~{downSampleReads}))   ~{fastq2}  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+                if [[ ~{output_suffix} == "fastq" ]]; then 
+                    head -n $((4 * ~{downSampleReads}))   ~{fastq1}  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
+                    head -n $((4 * ~{downSampleReads}))   ~{fastq2}  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+                else
+                    zcat ~{fastq1} | head -n $((4 * ~{downSampleReads})) | gzip  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
+                    zcat ~{fastq2} | head -n $((4 * ~{downSampleReads})) | gzip  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+                fi
+
             else 
                 echo "when downSampleMethod is top_reads, downSampleReads needs provided" >&2
                 exit 1
@@ -245,6 +292,7 @@ task downSampleBam {
         fi
         
         if [ ~{downSampleTool} = "samtools" ]; then
+            #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
             if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
                 downSampleFactor=~{downSampleRatio}
             elif [ ~{downSampleReads} != 0 ]; then
@@ -258,6 +306,7 @@ task downSampleBam {
             samtools index ~{outputFileNamePrefix}.downsampled.bam
 
         elif [ ~{downSampleTool} = "picard" ]; then
+            #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
             if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
                 downSampleFactor=~{downSampleRatio}
             elif [ ~{downSampleReads} != 0 ]; then

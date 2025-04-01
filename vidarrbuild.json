@@ -1,0 +1,6 @@
+{
+    "names": [
+        "downSample"
+    ],
+    "wdl": "downSample.wdl"
+}
