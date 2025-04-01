@@ -1,7 +1,8 @@
 [
     {
         "arguments": {
-            "downSample.fastqR1":  {
+            "downSample.inputFastq": {
+                "fastq1":  {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.1.fastq.gz",
                             "externalIds": [
@@ -13,7 +14,7 @@
                         },
                         "type": "EXTERNAL"
                     }, 
-            "downSample.fastqR2": {
+                "fastq2": {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.2.fastq.gz",
                             "externalIds": [
@@ -24,21 +25,26 @@
                             ]
                         },
                         "type": "EXTERNAL"
-                    },
+                    }
+            },
+            "downSample.inputBam": null,
             "downSample.outputFileNamePrefix": "PCSI0022C.val",
-            "downSample.downSampleTool": "seqtk/1.3",
+            "downSample.downSampleTool": "seqtk",
             "downSample.downSampleMethod": "random",
             "downSample.downSampleRatio": null,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
-            "downSample.downSampleFastq.jobMemory": null,
+            "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
-            "downSample.downSampleFastq.thread": null,
+            "downSample.downSampleFastq.threads": null,
             "downSample.downSampleBam.modules": null,
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
-            "downSample.downSampleBam.threads": null
+            "downSample.downSampleBam.threads": null,
+            "downSample.DoSorting": true,
+            "downSample.createIndex": true,
+            "downSample.checkCoverage": false
         },
         "description": "downSample seqtk test",
         "engineArguments": {
@@ -55,7 +61,7 @@
                 ],
                 "type": "ALL"
             },
-            "downSample.downSampledBamIndex": {
+            "downSample.downSampledBai": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_seqtk_test_@JENKINSID@"
@@ -91,7 +97,8 @@
     },
     {
         "arguments": {
-            "downSample.fastqR1":  {
+            "downSample.inputFastq": {
+                "fastq1":  {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.1.fastq.gz",
                             "externalIds": [
@@ -103,7 +110,7 @@
                         },
                         "type": "EXTERNAL"
                     }, 
-            "downSample.fastqR2": {
+                "fastq2": {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.2.fastq.gz",
                             "externalIds": [
@@ -114,21 +121,26 @@
                             ]
                         },
                         "type": "EXTERNAL"
-                    },
+                    }
+            },
+            "downSample.inputBam": null,
             "downSample.outputFileNamePrefix": "PCSI0022C.val",
-            "downSample.downSampleTool": "seqkit/2.3.1",
+            "downSample.downSampleTool": "seqkit",
             "downSample.downSampleMethod": "random",
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
-            "downSample.downSampleFastq.jobMemory": null,
+            "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
-            "downSample.downSampleFastq.thread": null,
+            "downSample.downSampleFastq.threads": null,
             "downSample.downSampleBam.modules": null,
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
-            "downSample.downSampleBam.threads": null
+            "downSample.downSampleBam.threads": null,
+            "downSample.DoSorting": true,
+            "downSample.createIndex": true,
+            "downSample.checkCoverage": false
         },
         "description": "downSample seqkit test",
         "engineArguments": {
@@ -145,7 +157,7 @@
                 ],
                 "type": "ALL"
             },
-            "downSample.downSampledBamIndex": {
+            "downSample.downSampledBai": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_seqkit_test_@JENKINSID@"
@@ -181,7 +193,8 @@
     },
     {
         "arguments": {
-            "downSample.fastqR1":  {
+            "downSample.inputFastq": {
+                "fastq1":  {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.1.fastq.gz",
                             "externalIds": [
@@ -193,7 +206,7 @@
                         },
                         "type": "EXTERNAL"
                     }, 
-            "downSample.fastqR2": {
+                "fastq2": {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.2.fastq.gz",
                             "externalIds": [
@@ -204,23 +217,28 @@
                             ]
                         },
                         "type": "EXTERNAL"
-                    },
+                    }
+            },
+            "downSample.inputBam": null,
             "downSample.outputFileNamePrefix": "PCSI0022C.val",
-            "downSample.downSampleTool": "samtools/1.16.1",
+            "downSample.downSampleTool": "seqkit",
             "downSample.downSampleMethod": "top_reads",
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
-            "downSample.downSampleFastq.jobMemory": null,
+            "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
-            "downSample.downSampleFastq.thread": null,
+            "downSample.downSampleFastq.threads": null,
             "downSample.downSampleBam.modules": null,
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
-            "downSample.downSampleBam.threads": null
+            "downSample.downSampleBam.threads": null,
+            "downSample.DoSorting": true,
+            "downSample.createIndex": true,
+            "downSample.checkCoverage": false
         },
-        "description": "downSample top_reads test",
+        "description": "downSample top_reads_test",
         "engineArguments": {
            "write_to_cache": false,
            "read_from_cache": false
@@ -235,7 +253,7 @@
                 ],
                 "type": "ALL"
             },
-            "downSample.downSampledBamIndex": {
+            "downSample.downSampledBai": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_top_reads_test_@JENKINSID@"
@@ -271,7 +289,8 @@
     },
     {
         "arguments": {
-            "downSample.bam":  {
+            "downSample.inputBam":  {
+                 "bam": {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
                             "externalIds": [
@@ -283,7 +302,7 @@
                         },
                         "type": "EXTERNAL"
                     }, 
-            "downSample.bai": {
+                "bamIndex": {
                         "contents": {
                             "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
                             "externalIds": [
@@ -294,111 +313,26 @@
                             ]
                         },
                         "type": "EXTERNAL"
-                    },
-            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19_chr21",
-            "downSample.downSampleTool": "picard/3.1.0",
-            "downSample.downSampleMethod": "random",
-            "downSample.downSampleRatio": 0.2,
-            "downSample.downSampleReads": 100,
-            "downSample.randomSampleSeed": null,
-            "downSample.downSampleFastq.jobMemory": null,
-            "downSample.downSampleFastq.modules": null,
-            "downSample.downSampleFastq.timeout": null,
-            "downSample.downSampleFastq.thread": null,
-            "downSample.downSampleBam.modules": null,
-            "downSample.downSampleBam.memory": null,
-            "downSample.downSampleBam.timeout": null,
-            "downSample.downSampleBam.threads": null
-        },
-        "description": "downSample top_reads test",
-        "engineArguments": {
-           "write_to_cache": false,
-           "read_from_cache": false
-        },
-        "id": "downSample_top_reads_test",
-        "metadata": {
-            "downSample.downSampledBam": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_top_reads_test_@JENKINSID@"
                     }
-                ],
-                "type": "ALL"
             },
-            "downSample.downSampledBamIndex": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_top_reads_test_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            },
-            "downSample.downSampledFastq1": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_top_reads_test_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            },
-            "downSample.downSampledFastq2": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_top_reads_test_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            }
-        },
-        "validators": [
-            {
-                "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
-                "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_top_reads_test.metrics",
-                "type": "script"
-            }
-        ]
-    },
-    {
-        "arguments": {
-            "downSample.bam":  {
-                        "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
-                            "externalIds": [
-                                {
-                                    "id": "TEST",
-                                    "provider": "TEST"
-                                }
-                            ]
-                        },
-                        "type": "EXTERNAL"
-                    }, 
-            "downSample.bai": {
-                        "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
-                            "externalIds": [
-                                {
-                                    "id": "TEST",
-                                    "provider": "TEST"
-                                }
-                            ]
-                        },
-                        "type": "EXTERNAL"
-                    },
+            "downSample.inputFastq": null,
             "downSample.outputFileNamePrefix": "PCSI0022C.val",
-            "downSample.downSampleTool": "picard/3.1.0",
+            "downSample.downSampleTool": "picard",
             "downSample.downSampleMethod": "random",
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
-            "downSample.downSampleFastq.jobMemory": null,
+            "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
-            "downSample.downSampleFastq.thread": null,
+            "downSample.downSampleFastq.threads": null,
             "downSample.downSampleBam.modules": null,
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
-            "downSample.downSampleBam.threads": null
+            "downSample.downSampleBam.threads": null,
+            "downSample.DoSorting": true,
+            "downSample.createIndex": true,
+            "downSample.checkCoverage": false
         },
         "description": "downSample picard test",
         "engineArguments": {
@@ -415,7 +349,7 @@
                 ],
                 "type": "ALL"
             },
-            "downSample.downSampledBamIndex": {
+            "downSample.downSampledBai": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_picard_test_@JENKINSID@"
@@ -451,44 +385,50 @@
     },
     {
         "arguments": {
-            "downSample.bam":  {
-                        "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
-                            "externalIds": [
-                                {
-                                    "id": "TEST",
-                                    "provider": "TEST"
-                                }
-                            ]
-                        },
-                        "type": "EXTERNAL"
-                    }, 
-            "downSample.bai": {
-                        "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
-                            "externalIds": [
-                                {
-                                    "id": "TEST",
-                                    "provider": "TEST"
-                                }
-                            ]
-                        },
-                        "type": "EXTERNAL"
-                    },
+            "downSample.inputBam":  {
+                "bam": {
+                       "contents": {
+                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
+                           "externalIds": [
+                               {
+                                   "id": "TEST",
+                                   "provider": "TEST"
+                               }
+                           ]
+                       },
+                       "type": "EXTERNAL"
+                   }, 
+               "bamIndex": {
+                       "contents": {
+                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
+                           "externalIds": [
+                               {
+                                   "id": "TEST",
+                                   "provider": "TEST"
+                               }
+                           ]
+                       },
+                       "type": "EXTERNAL"
+                   }
+            },
+            "downSample.inputFastq": null,
             "downSample.outputFileNamePrefix": "PCSI0022C.val",
-            "downSample.downSampleTool": "samtools/1.16.1",
+            "downSample.downSampleTool": "samtools",
             "downSample.downSampleMethod": "random",
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
-            "downSample.downSampleFastq.jobMemory": null,
+            "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
-            "downSample.downSampleFastq.thread": null,
+            "downSample.downSampleFastq.threads": null,
             "downSample.downSampleBam.modules": null,
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
-            "downSample.downSampleBam.threads": null
+            "downSample.downSampleBam.threads": null,
+            "downSample.DoSorting": true,
+            "downSample.createIndex": true,
+            "downSample.checkCoverage": false
         },
         "description": "downSample samtools test",
         "engineArguments": {
@@ -505,7 +445,7 @@
                 ],
                 "type": "ALL"
             },
-            "downSample.downSampledBamIndex": {
+            "downSample.downSampledBai": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_samtools_test_@JENKINSID@"
