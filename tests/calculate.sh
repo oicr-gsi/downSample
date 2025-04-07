@@ -1,6 +1,5 @@
 #!/bin/bash
-set -o nounset
-set -o pipefail
+set -euo pipefail
 
 cd $1
 
@@ -8,4 +7,4 @@ cd $1
 
 ls | sort
 
-
+find . -name *.metrics -xtype f -exec sh -c "cat {} | md5sum" \;
