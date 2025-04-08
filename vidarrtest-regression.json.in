@@ -84,6 +84,14 @@
                     }
                 ],
                 "type": "ALL"
+            },
+            "downSample.downSampleMetrics": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_seqtk_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
             }
         },
         "validators": [
@@ -180,6 +188,14 @@
                     }
                 ],
                 "type": "ALL"
+            },
+            "downSample.downSampleMetrics": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_seqkit_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
             }
         },
         "validators": [
@@ -221,7 +237,7 @@
             },
             "downSample.inputBam": null,
             "downSample.outputFileNamePrefix": "PCSI0022C.val",
-            "downSample.downSampleTool": "seqkit",
+            "downSample.downSampleTool": "",
             "downSample.downSampleMethod": "top_reads",
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
@@ -276,6 +292,14 @@
                     }
                 ],
                 "type": "ALL"
+            },
+            "downSample.downSampleMetrics": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_top_reads_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
             }
         },
         "validators": [
@@ -316,7 +340,7 @@
                     }
             },
             "downSample.inputFastq": null,
-            "downSample.outputFileNamePrefix": "PCSI0022C.val",
+            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19",
             "downSample.downSampleTool": "picard",
             "downSample.downSampleMethod": "random",
             "downSample.downSampleRatio": 0.2,
@@ -332,7 +356,7 @@
             "downSample.downSampleBam.threads": null,
             "downSample.DoSorting": true,
             "downSample.createIndex": true,
-            "downSample.checkCoverage": false
+            "downSample.checkCoverage": true
         },
         "description": "downSample picard test",
         "engineArguments": {
@@ -369,6 +393,14 @@
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_picard_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "downSample.downSampleMetrics": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample__picard_test_@JENKINSID@"
                     }
                 ],
                 "type": "ALL"
@@ -412,7 +444,7 @@
                    }
             },
             "downSample.inputFastq": null,
-            "downSample.outputFileNamePrefix": "PCSI0022C.val",
+            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19",
             "downSample.downSampleTool": "samtools",
             "downSample.downSampleMethod": "random",
             "downSample.downSampleRatio": 0.2,
@@ -465,6 +497,14 @@
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_samtools_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "downSample.downSampleMetrics": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample__samtools_test_@JENKINSID@"
                     }
                 ],
                 "type": "ALL"

@@ -28,6 +28,7 @@ workflow downSample {
     parameter_meta {
         inputFastq: "the input fastq file pair"
         inputBam: "the input bam and index"
+        refFasta: "Path to human genome FASTA reference"
         outputFileNamePrefix: "Prefix of output file name"
         downSampleTool: "the tool to be used in downsampling, a few options available"
         downSampleMethod: "choose between random/top_reads"
@@ -74,7 +75,7 @@ workflow downSample {
     meta {
         author: "Gavin Peng"
         email: "gpeng@oicr.on.ca"
-        description: "Workflow to downsample fastq or bam files. Can use a combination of differrent method, tools and parameters. Notes: 1) downsample method can choose between random and top_reads, the later can only applied to fastq inputs; 2) fastq downsample tools include seqtk, seqkit; bam downsample tools include samtools, picard; 3) for seqkit, samtools, picard, prefered parameter is downSampleRatio, as use downSampleReads resulting number of reads is not exact, and may include extra compute time. Assume input is WGS data, for TS, the resulting bam coverage evaluation needs bed file (not included in this wdl as assume TS down sampling need is rare)"
+        description: "Workflow to downsample fastq or bam files. Can use a combination of differrent method, tools and parameters. Notes: 1) downsample method can choose between random and top_reads, the later can only applied to fastq inputs; 2) fastq downsample tools include seqtk, seqkit; bam downsample tools include samtools, picard; 3) for seqkit, samtools, picard, prefered parameter is downSampleRatio, as use downSampleReads resulting number of reads is not exact, and may include extra compute time. There is option for coverage check for dowm sampled bam file, assuming input is WGS data, for TS library, the resulting bam coverage evaluation needs bed file (not included in this wdl as TS down sampling need is rare)"
         dependencies: [
         {
             name: "seqtk/1.3",
@@ -110,7 +111,7 @@ workflow downSample {
             description: "Downsampled bam file index",
             vidarr_label: "downSampledBai"
         },
-        ownSampleMetrics: {
+        downSampleMetrics: {
             description: "The metrics of downSampled output",
             vidarr_label: "downSampleMetrics"
         }
