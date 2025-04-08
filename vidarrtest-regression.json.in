@@ -343,7 +343,7 @@
                     }
             },
             "downSample.inputFastq": null,
-            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19",
+            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19_picard",
             "downSample.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg19-p13/hg19_random.fa",
             "downSample.downSampleTool": "picard",
             "downSample.downSampleMethod": "random",
