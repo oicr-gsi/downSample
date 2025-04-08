@@ -159,7 +159,7 @@ task downSampleFastq {
     String output_suffix = if (sub(basename(fastq1), ".*\\.gz$", "") != basename(fastq1)) then "fastq.gz" else "fastq"
 
     command <<<
-        valid_downSampleTool=("seqtk/1.3" "seqkit/2.3.1" "")
+        valid_downSampleTool=("seqtk" "seqkit" "")
         valid_downSampleMethod=("random" "top_reads")
 
         is_valid=false
