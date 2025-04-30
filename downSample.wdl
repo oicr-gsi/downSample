@@ -14,7 +14,7 @@ workflow downSample {
     input {
         fastqPair? inputFastq
         bamFile? inputBam
-        String? refFasta
+        String reference
         String outputFileNamePrefix
         String downSampleTool
         String downSampleMethod
@@ -38,6 +38,15 @@ workflow downSample {
         doSorting: "whether do sorting after downsample for bam file"
         createIndex: "whether create index for downsampled bam"
         checkCoverage: "whether check coverage for downsampled bam"
+    }
+    Map[String,String] downsample_modules_by_genome = { 
+    "hg19": "hg19/p13 samtools/1.16.1 picard/3.1.0 hg38-bwa-index-with-alt/0.7.12",
+    "hg38": "hg38/p12 samtools/1.16.1 picard/3.1.0 hg38-bwa-index-with-alt/0.7.12"
+    }
+
+    Map[String,String] downsampleRef_by_genome = { 
+    "hg19": "$HG19_ROOT/hg19_random.fa",
+    "hg38": "$HG38_ROOT/hg38_random.fa"
     }
 
     if ( defined (inputFastq) ) {
@@ -67,7 +76,8 @@ workflow downSample {
                 doSorting = doSorting,
                 createIndex = createIndex,
                 checkCoverage = checkCoverage,
-                refFasta = refFasta
+                refFasta = downsampleRef_by_genome[reference],
+                modules = downsample_modules_by_genome[reference]
         }
     }
     File? downSample_Metrics = if (defined(inputBam)) then downSampleBam.downSampleMetrics else downSampleFastq.downSampleMetrics
@@ -269,7 +279,7 @@ task downSampleBam {
         Int timeout = 12
         Int memory = 24
         Int threads = 8
-        String modules = "samtools/1.16.1 picard/3.1.0 hg38-bwa-index-with-alt/0.7.12"
+        String modules
     }
 
     parameter_meta {
