@@ -34,7 +34,7 @@ Parameter|Value|Default|Description
 ---|---|---|---
 `inputFastq`|fastqPair?|None|the input fastq file pair
 `inputBam`|bamFile?|None|the input bam and index
-`refFasta`|String?|None|Path to human genome FASTA reference
+`reference`|String|None|Name of human genome reference
 `downSampleRatio`|Float?|None|given a ratio for downsampled reads
 `downSampleReads`|Int?|None|given a number of reads after down sample
 `randomSampleSeed`|Int?|None|the seed for random sampling
