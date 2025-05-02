@@ -35,6 +35,7 @@
             "downSample.downSampleRatio": null,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
+            "downSample.targetCoverage": null,
             "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
@@ -43,6 +44,9 @@
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
             "downSample.downSampleBam.threads": null,
+            "downSample.calculateCoverage.memory": null,
+            "downSample.calculateCoverage.timeout": null,
+            "downSample.calculateCoverage.threads": null,
             "downSample.doSorting": true,
             "downSample.createIndex": true,
             "downSample.checkCoverage": false
@@ -140,6 +144,7 @@
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
+            "downSample.targetCoverage": null,
             "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
@@ -148,6 +153,9 @@
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
             "downSample.downSampleBam.threads": null,
+            "downSample.calculateCoverage.memory": null,
+            "downSample.calculateCoverage.timeout": null,
+            "downSample.calculateCoverage.threads": null,
             "downSample.doSorting": true,
             "downSample.createIndex": true,
             "downSample.checkCoverage": false
@@ -245,6 +253,7 @@
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
+            "downSample.targetCoverage": null,
             "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
@@ -253,6 +262,9 @@
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
             "downSample.downSampleBam.threads": null,
+            "downSample.calculateCoverage.memory": null,
+            "downSample.calculateCoverage.timeout": null,
+            "downSample.calculateCoverage.threads": null,
             "downSample.doSorting": true,
             "downSample.createIndex": true,
             "downSample.checkCoverage": false
@@ -350,6 +362,7 @@
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
+            "downSample.targetCoverage": null,
             "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
@@ -358,6 +371,9 @@
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
             "downSample.downSampleBam.threads": null,
+            "downSample.calculateCoverage.memory": null,
+            "downSample.calculateCoverage.timeout": null,
+            "downSample.calculateCoverage.threads": null,
             "downSample.doSorting": true,
             "downSample.createIndex": true,
             "downSample.checkCoverage": true
@@ -455,6 +471,7 @@
             "downSample.downSampleRatio": 0.2,
             "downSample.downSampleReads": 100,
             "downSample.randomSampleSeed": null,
+            "downSample.targetCoverage": null,
             "downSample.downSampleFastq.memory": null,
             "downSample.downSampleFastq.modules": null,
             "downSample.downSampleFastq.timeout": null,
@@ -463,6 +480,9 @@
             "downSample.downSampleBam.memory": null,
             "downSample.downSampleBam.timeout": null,
             "downSample.downSampleBam.threads": null,
+            "downSample.calculateCoverage.memory": null,
+            "downSample.calculateCoverage.timeout": null,
+            "downSample.calculateCoverage.threads": null,
             "downSample.doSorting": true,
             "downSample.createIndex": true,
             "downSample.checkCoverage": false
@@ -520,6 +540,115 @@
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
                 "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_samtools_test.metrics",
+                "type": "script"
+            }
+        ]
+    },
+    {
+        "arguments": {
+            "downSample.inputBam":  {
+                "bam": {
+                       "contents": {
+                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
+                           "externalIds": [
+                               {
+                                   "id": "TEST",
+                                   "provider": "TEST"
+                               }
+                           ]
+                       },
+                       "type": "EXTERNAL"
+                   }, 
+               "bamIndex": {
+                       "contents": {
+                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
+                           "externalIds": [
+                               {
+                                   "id": "TEST",
+                                   "provider": "TEST"
+                               }
+                           ]
+                       },
+                       "type": "EXTERNAL"
+                   }
+            },
+            "downSample.inputFastq": null,
+            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19",
+            "downSample.reference": "hg19",
+            "downSample.downSampleTool": "samtools",
+            "downSample.downSampleMethod": "random",
+            "downSample.downSampleRatio": null,
+            "downSample.downSampleReads": 100,
+            "downSample.randomSampleSeed": null,
+            "downSample.targetCoverage": 0.0003,
+            "downSample.downSampleFastq.memory": null,
+            "downSample.downSampleFastq.modules": null,
+            "downSample.downSampleFastq.timeout": null,
+            "downSample.downSampleFastq.threads": null,
+            "downSample.downSampleBam.modules": null,
+            "downSample.downSampleBam.memory": null,
+            "downSample.downSampleBam.timeout": null,
+            "downSample.downSampleBam.threads": null,
+            "downSample.calculateCoverage.memory": null,
+            "downSample.calculateCoverage.timeout": null,
+            "downSample.calculateCoverage.threads": null,
+            "downSample.doSorting": true,
+            "downSample.createIndex": true,
+            "downSample.checkCoverage": false
+        },
+        "description": "downSample_target_coverage_test",
+        "engineArguments": {
+           "write_to_cache": false,
+           "read_from_cache": false
+        },
+        "id": "downSample_target_coverage_test",
+        "metadata": {
+            "downSample.downSampledBam": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_target_coverage_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "downSample.downSampledBai": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_target_coverage_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "downSample.downSampledFastq1": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_target_coverage_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "downSample.downSampledFastq2": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample_target_coverage_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "downSample.downSampleMetrics": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_downSample__samtools_test_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            }
+        },
+        "validators": [
+            {
+                "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
+                "metrics_compare": "@CHECKOUT@/tests/compare.sh",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_target_coverage_test.metrics",
                 "type": "script"
             }
         ]
