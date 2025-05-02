@@ -1,6 +1,6 @@
 # downSample
 
-Workflow to downsample fastq or bam files. Can use a combination of differrent method, tools and parameters. Notes: 1) downsample method can choose between random and top_reads, the later can only applied to fastq inputs; 2) fastq downsample tools include seqtk, seqkit; bam downsample tools include samtools, picard; 3) for seqkit, samtools, picard, prefered parameter is downSampleRatio, as use downSampleReads resulting number of reads is not exact, and may include extra compute time. Assume input is WGS data, for TS, the resulting bam coverage evaluation needs bed file (not included in this wdl as assume TS down sampling need is rare)
+Workflow to downsample fastq or bam files. Can use a combination of differrent method, tools and parameters. Notes: 1) downsample method can choose between random and top_reads, the later can only applied to fastq inputs; 2) fastq downsample tools include seqtk, seqkit; bam downsample tools include samtools, picard; 3) for seqkit, samtools, picard, prefered parameter is downSampleRatio, as use downSampleReads resulting number of reads is not exact, and may include extra compute time. There is option for coverage check for dowm sampled bam file, assuming input is WGS data, for TS library, the resulting bam coverage evaluation needs bed file (not included in this wdl as TS down sampling need is rare)
 
 ## Overview
 
@@ -24,6 +24,7 @@ java -jar cromwell.jar run downSample.wdl --inputs inputs.json
 #### Required workflow parameters:
 Parameter|Value|Description
 ---|---|---
+`reference`|String|The reference genome for bam input
 `outputFileNamePrefix`|String|Prefix of output file name
 `downSampleTool`|String|the tool to be used in downsampling, a few options available
 `downSampleMethod`|String|choose between random/top_reads
@@ -34,9 +35,9 @@ Parameter|Value|Default|Description
 ---|---|---|---
 `inputFastq`|fastqPair?|None|the input fastq file pair
 `inputBam`|bamFile?|None|the input bam and index
-`reference`|String|None|Name of human genome reference
-`downSampleRatio`|Float?|None|given a ratio for downsampled reads
+`downSampleRatio`|Float?|None|given a ratio for downsampled reads, if it is not given, then targetCoverage must be given
 `downSampleReads`|Int?|None|given a number of reads after down sample
+`targetCoverage`|Float?|None|Targeted coverage after downsampling bam file
 `randomSampleSeed`|Int?|None|the seed for random sampling
 `doSorting`|Boolean|true|whether do sorting after downsample for bam file
 `createIndex`|Boolean|true|whether create index for downsampled bam
@@ -50,10 +51,12 @@ Parameter|Value|Default|Description
 `downSampleFastq.memory`|Int|24|The GB of memory provided to the task
 `downSampleFastq.threads`|Int|8|The number of threads the task has access to
 `downSampleFastq.modules`|String|"seqtk/1.3 seqkit/2.3.1"|The modules that will be loaded
+`calculateCoverage.timeout`|Int|4|The hours until the task is killed
+`calculateCoverage.memory`|Int|8|The GB of memory provided to the task
+`calculateCoverage.threads`|Int|1|The number of threads the task has access to
 `downSampleBam.timeout`|Int|12|The hours until the task is killed
 `downSampleBam.memory`|Int|24|The GB of memory provided to the task
 `downSampleBam.threads`|Int|8|The number of threads the task has access to
-`downSampleBam.modules`|String|"samtools/1.16.1 picard/3.1.0 hg38-bwa-index-with-alt/0.7.12"|The modules that will be loaded
 
 
 ### Outputs
@@ -66,15 +69,13 @@ Output | Type | Description | Labels
 `downSampledBai`|File?|Downsampled bam file index|vidarr_label: downSampledBai
 `downSampleMetrics`|File?|The metrics of downSampled output|vidarr_label: downSampleMetrics
 
-
 ## Commands
 This section lists command(s) run by downSample workflow
 
 * Running downSample
 
-
 ```
-        valid_downSampleTool=("seqtk/1.3" "seqkit/2.3.1" "")
+        valid_downSampleTool=("seqtk" "seqkit" "")
         valid_downSampleMethod=("random" "top_reads")
 
         is_valid=false
@@ -232,8 +233,22 @@ This section lists command(s) run by downSample workflow
             cat coverage_metrics >>  ~{outputFileNamePrefix}.downsample.metrics
         fi
 ```
+```
+        set -euo pipefail
 
- ## Support
+        export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
+        java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
+                -I ~{bam} \
+                -O coverage_metrics \
+                -R ~{refFasta}
+
+            mean_cov=$(cat coverage_metrics | grep -A 2 '## METRICS CLASS' | tail -n 1 | awk '{print $2}')
+            target_cov=$(printf "%.10f" ~{targetCoverage})
+            downSampleRatio=$(echo "$target_cov / $mean_cov" | bc -l)
+            echo $downSampleRatio > downSampleRatio.txt
+```
+
+## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
 

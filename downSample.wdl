@@ -29,7 +29,7 @@ workflow downSample {
     parameter_meta {
         inputFastq: "the input fastq file pair"
         inputBam: "the input bam and index"
-        refFasta: "Path to human genome FASTA reference"
+        reference: "The reference genome for bam input"
         outputFileNamePrefix: "Prefix of output file name"
         downSampleTool: "the tool to be used in downsampling, a few options available"
         downSampleMethod: "choose between random/top_reads"
