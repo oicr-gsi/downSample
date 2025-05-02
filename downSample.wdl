@@ -20,6 +20,7 @@ workflow downSample {
         String downSampleMethod
         Float? downSampleRatio
         Int? downSampleReads
+        Float? targetCoverage
         Int? randomSampleSeed
         Boolean doSorting = true
         Boolean createIndex = true
@@ -32,18 +33,18 @@ workflow downSample {
         outputFileNamePrefix: "Prefix of output file name"
         downSampleTool: "the tool to be used in downsampling, a few options available"
         downSampleMethod: "choose between random/top_reads"
-        downSampleRatio: "given a ratio for downsampled reads"
+        downSampleRatio: "given a ratio for downsampled reads, if it is not given, then targetCoverage must be given"
         downSampleReads: "given a number of reads after down sample"
+        targetCoverage: "Targeted coverage after downsampling bam file"
         randomSampleSeed: "the seed for random sampling"
         doSorting: "whether do sorting after downsample for bam file"
         createIndex: "whether create index for downsampled bam"
         checkCoverage: "whether check coverage for downsampled bam"
     }
     Map[String,String] downsample_modules_by_genome = { 
-    "hg19": "hg19/p13 samtools/1.16.1 picard/3.1.0 hg38-bwa-index-with-alt/0.7.12",
-    "hg38": "hg38/p12 samtools/1.16.1 picard/3.1.0 hg38-bwa-index-with-alt/0.7.12"
+    "hg19": "hg19/p13 samtools/1.16.1 picard/3.1.0",
+    "hg38": "hg38/p12 samtools/1.16.1 picard/3.1.0"
     }
-
     Map[String,String] downsampleRef_by_genome = { 
     "hg19": "$HG19_ROOT/hg19_random.fa",
     "hg38": "$HG38_ROOT/hg38_random.fa"
@@ -63,6 +64,17 @@ workflow downSample {
         }
     }
     if  ( defined (inputBam)) {
+        if ( defined (targetCoverage)) {
+            call calculateCoverage {
+                input:
+                    bam = select_first([inputBam]).bam,
+                    bai = select_first([inputBam]).bamIndex,
+                    refFasta = downsampleRef_by_genome[reference],
+                    modules = downsample_modules_by_genome[reference],
+                    targetCoverage = targetCoverage 
+            }
+        }
+
         call downSampleBam {
             input:
                 bam = select_first([inputBam]).bam,
@@ -71,7 +83,7 @@ workflow downSample {
                 outputFileNamePrefix = outputFileNamePrefix,
                 downSampleMethod = downSampleMethod,
                 randomSampleSeed = select_first([randomSampleSeed, 0]),
-                downSampleRatio = select_first([downSampleRatio, 0]),
+                downSampleRatio = select_first([calculateCoverage.downSampleRatio, downSampleRatio]),
                 downSampleReads = select_first([downSampleReads, 0]),
                 doSorting = doSorting,
                 createIndex = createIndex,
@@ -389,6 +401,54 @@ task downSampleBam {
     }
 
     runtime {
+        modules: "~{modules}"
+        memory:  "~{memory} GB"
+        cpu:     "~{threads}"
+        timeout: "~{timeout}"
+    }
+}
+
+task calculateCoverage {
+    input {
+        File bam
+        File bai
+        String? refFasta
+        String modules
+        Int timeout = 4
+        Int memory = 8
+        Int threads = 1
+        Float? targetCoverage
+    }
+    parameter_meta {
+        bam: "the input bam file"
+        bai: "the input bam index"
+        refFasta: "Path to human genome FASTA reference"
+        timeout: "The hours until the task is killed"
+        memory: "The GB of memory provided to the task"
+        threads: "The number of threads the task has access to"
+        modules: "The modules that will be loaded"
+        targetCoverage: "Targeted coverage after downsampling bam file"
+    }
+    command <<<
+        set -euo pipefail
+
+        export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
+        java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
+                -I ~{bam} \
+                -O coverage_metrics \
+                -R ~{refFasta}
+
+            mean_cov=$(cat coverage_metrics | grep -A 2 '## METRICS CLASS' | tail -n 1 | awk '{print $2}')
+            target_cov=$(printf "%.10f" ~{targetCoverage})
+            downSampleRatio=$(echo "$target_cov / $mean_cov" | bc -l)
+            echo $downSampleRatio > downSampleRatio.txt
+  >>>
+
+  output {
+    Float downSampleRatio = read_float("downSampleRatio.txt")
+  }
+
+  runtime {
         modules: "~{modules}"
         memory:  "~{memory} GB"
         cpu:     "~{threads}"
