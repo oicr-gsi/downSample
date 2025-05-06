@@ -92,7 +92,7 @@ workflow downSample {
                 modules = downsample_modules_by_genome[reference]
         }
     }
-    File? downSample_Metrics = if (defined(inputBam)) then downSampleBam.downSampleMetrics else downSampleFastq.downSampleMetrics
+
 
     meta {
         author: "Gavin Peng"
@@ -144,7 +144,7 @@ workflow downSample {
         File? downSampledFastq2 = downSampleFastq.downSampledFastq2
         File? downSampledBam = downSampleBam.downSampledBam
         File? downSampledBai = downSampleBam.downSampledBai
-        File? downSampleMetrics = downSample_Metrics 
+        File downSampleMetrics = select_first([downSampleBam.downSampleMetrics, downSampleFastq.downSampleMetrics])
     }
 } 
 

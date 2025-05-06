@@ -67,188 +67,188 @@ Output | Type | Description | Labels
 `downSampledFastq2`|File?|Output downsampled fastq read2|vidarr_label: downSampledFastq1
 `downSampledBam`|File?|Downsampled bam file|vidarr_label: downSampledBam
 `downSampledBai`|File?|Downsampled bam file index|vidarr_label: downSampledBai
-`downSampleMetrics`|File?|The metrics of downSampled output|vidarr_label: downSampleMetrics
+`downSampleMetrics`|File|The metrics of downSampled output|vidarr_label: downSampleMetrics
+
 
 ## Commands
-This section lists command(s) run by downSample workflow
-
-* Running downSample
-
-```
-        valid_downSampleTool=("seqtk" "seqkit" "")
-        valid_downSampleMethod=("random" "top_reads")
-
-        is_valid=false
-
-        for tool in "${valid_downSampleTool[@]}"; do
-            if [ "$tool" = "~{downSampleTool}" ]; then
-                is_valid=true
-                break
-            fi
-        done
-
-        if [ "$is_valid" = false ]; then
-            echo "ERROR: Invalid downSampleTool: ~{downSampleTool}" >&2
-            exit 1
-        fi
-        if [[ ! " ${valid_downSampleMethod[@]} " =~  ~{downSampleMethod} ]]; then
-            echo "valid downSampleMethod values are random or top_reads" >&2
-            exit 1
-        fi
-        if [ ~{randomSampleSeed} != 0 ]; then
-                seed=~{randomSampleSeed}
-            else
-                seed=42
-        fi
-
-        if [ ~{downSampleMethod} = "top_reads" ]; then
-            if [ ~{downSampleReads} -ne 0 ]; then
-                if [[ ~{output_suffix} == "fastq" ]]; then 
-                    head -n $((4 * ~{downSampleReads}))   ~{fastq1}  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
-                    head -n $((4 * ~{downSampleReads}))   ~{fastq2}  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
-                else
-                    zcat ~{fastq1} | head -n $((4 * ~{downSampleReads})) | gzip  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
-                    zcat ~{fastq2} | head -n $((4 * ~{downSampleReads})) | gzip  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
-                fi               
-                echo "FINAL_READS=~{downSampleReads}" > ~{outputFileNamePrefix}.downSample.metrics
-            else 
-                echo "when downSampleMethod is top_reads, downSampleReads needs provided" >&2
-                exit 1
-            fi
-
-        elif [ ~{downSampleTool} = "seqtk" ]; then
-            #if both downSampleReads and downSampleRatio provided then will use downSampleReads
-            if [ ~{downSampleReads} != 0 ]; then
-                downSampleFactor=~{downSampleReads}
-            elif (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
-                downSampleFactor=~{downSampleRatio}
-            else
-                echo "downSampleReads or downSampleRatio need provided" >&2
-                exit 1
-            fi
-
-            if [[ ~{output_suffix} == "fastq" ]]; then 
-                seqtk sample -s${seed} ~{fastq1} ${downSampleFactor} > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 
-                echo "FINAL_READS=$(cat ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} | awk '{c++} END {print c/4}')" > ~{outputFileNamePrefix}.downSample.metrics
-                seqtk sample -s${seed} ~{fastq2} ${downSampleFactor} > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
-            else
-                seqtk sample -s${seed} ~{fastq1} ${downSampleFactor} | gzip > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 
-                echo "FINAL_READS=$(zcat ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} | awk '{c++} END {print c/4}')" >  ~{outputFileNamePrefix}.downSample.metrics
-                seqtk sample -s${seed} ~{fastq2} ${downSampleFactor} | gzip > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
-            fi
-
-        elif [ ~{downSampleTool} = "seqkit" ]; then
-            #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
-            if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
-                seqkit sample ~{fastq1} -p ~{downSampleRatio} -s ${seed} -2 -o ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 2>&1 | tee ~{outputFileNamePrefix}.downSample.metrics | grep -o "[0-9]* sequences outputted" | awk '{print "FINAL_READS="$1}' >> ~{outputFileNamePrefix}.downSample.metrics
-                seqkit sample ~{fastq2} -p ~{downSampleRatio} -s ${seed} -2 -o ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
-
-            elif [ ~{downSampleReads} -ne 0 ]; then
-                seqkit sample -p 0.2 ~{fastq1} -s ${seed} | seqkit head -n ~{downSampleReads} -o ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 
-                seqkit sample -p 0.2 ~{fastq2} -s ${seed} | seqkit head -n ~{downSampleReads} -o ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
-                echo "FINAL_READS=~{downSampleReads}" > ~{outputFileNamePrefix}.downSample.metrics
-            else
-                echo "downSampleReads or downSampleRatio need provided" >&2
-                exit 1
-            fi
-        fi
-```
-```
-        set -euo pipefail
-        valid_downSampleTool=("samtools", "picard")
-        if [[ ! " ${valid_downSampleTool[@]} " =~  ~{downSampleTool} ]]; then
-            echo "valid downSampleTool values are samtools or picard for bam dowmsampling" >&2
-            exit 1
-        fi
-        if [[ ~{downSampleMethod} != "random" ]]; then
-            echo "valid downSampleMethod for bam downsampling is random" >&2
-            exit 1
-        fi
-        if [ ~{randomSampleSeed} != 0 ]; then
-                seed=~{randomSampleSeed}
-            else
-                seed=42
-        fi
-        
-        if [ ~{downSampleTool} = "samtools" ]; then
-            #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
-            if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
-                downSampleFactor=~{downSampleRatio}
-            elif [ ~{downSampleReads} != 0 ]; then
-                TOTAL_READS=$(samtools view -c ~{bam})
-                downSampleFactor=$(echo "scale=6; ~{downSampleReads} / $TOTAL_READS" | bc)
-            else
-                echo "downSampleReads or downSampleRatio need provided" >&2
-                exit 1
-            fi
-            samtools view -s ${downSampleFactor} -b ~{bam} -o downsampled.bam
-            echo "TOTAL_READS=$(samtools view -c downsampled.bam)" > ~{outputFileNamePrefix}.downsample.metrics
-
-            if [ ~{doSorting} = true ]; then
-                samtools sort downsampled.bam -o ~{outputFileNamePrefix}.downsampled.bam
-            fi
-            if [ ~{createIndex} = true ]; then
-                samtools index ~{outputFileNamePrefix}.downsampled.bam
-            fi
-
-        elif [ ~{downSampleTool} = "picard" ]; then
-            #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
-            if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
-                downSampleFactor=~{downSampleRatio}
-            elif [ ~{downSampleReads} != 0 ]; then
-                TOTAL_READS=$(samtools view -c ~{bam})
-                downSampleFactor=$(echo "scale=6; ~{downSampleReads} / $TOTAL_READS" | bc)
-            else
-                echo "downSampleReads or downSampleRatio need provided" >&2
-                exit 1
-            fi
-            export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
-            java -jar ${PICARD_ROOT}/picard.jar DownsampleSam \
-            -I ~{bam} \
-            -O downsampled.bam \
-            -P ${downSampleFactor} \
-            --RANDOM_SEED ${seed} \
-            --CREATE_INDEX false \
-            --VALIDATION_STRINGENCY SILENT \
-            --METRICS_FILE ~{outputFileNamePrefix}.downsample.metrics
-
-            if [ ~{doSorting} = true ]; then
-                java -jar ${PICARD_ROOT}/picard.jar SortSam \
-                -I downsampled.bam \
-                -O ~{outputFileNamePrefix}.downsampled.bam \
-                --SORT_ORDER coordinate
-            fi
-            if [ ~{createIndex} = true ]; then
-                java -jar ${PICARD_ROOT}/picard.jar BuildBamIndex \
-                -I ~{outputFileNamePrefix}.downsampled.bam
-                mv ~{outputFileNamePrefix}.downsampled.bai ~{outputFileNamePrefix}.downsampled.bam.bai
-            fi
-        fi
-        if [ ~{checkCoverage} = true ]; then
-                java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
-                -I ~{outputFileNamePrefix}.downsampled.bam \
-                -O coverage_metrics \
-                -R ~{refFasta}
-
-            cat coverage_metrics >>  ~{outputFileNamePrefix}.downsample.metrics
-        fi
-```
-```
-        set -euo pipefail
-
-        export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
-        java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
-                -I ~{bam} \
-                -O coverage_metrics \
-                -R ~{refFasta}
-
-            mean_cov=$(cat coverage_metrics | grep -A 2 '## METRICS CLASS' | tail -n 1 | awk '{print $2}')
-            target_cov=$(printf "%.10f" ~{targetCoverage})
-            downSampleRatio=$(echo "$target_cov / $mean_cov" | bc -l)
-            echo $downSampleRatio > downSampleRatio.txt
-```
-
-## Support
+ This section lists command(s) run by downSample workflow
+ 
+ * Running downSample
+ 
+ ```
+         valid_downSampleTool=("seqtk" "seqkit" "")
+         valid_downSampleMethod=("random" "top_reads")
+ 
+         is_valid=false
+ 
+         for tool in "${valid_downSampleTool[@]}"; do
+             if [ "$tool" = "~{downSampleTool}" ]; then
+                 is_valid=true
+                 break
+             fi
+         done
+ 
+         if [ "$is_valid" = false ]; then
+             echo "ERROR: Invalid downSampleTool: ~{downSampleTool}" >&2
+             exit 1
+         fi
+         if [[ ! " ${valid_downSampleMethod[@]} " =~  ~{downSampleMethod} ]]; then
+             echo "valid downSampleMethod values are random or top_reads" >&2
+             exit 1
+         fi
+         if [ ~{randomSampleSeed} != 0 ]; then
+                 seed=~{randomSampleSeed}
+             else
+                 seed=42
+         fi
+ 
+         if [ ~{downSampleMethod} = "top_reads" ]; then
+             if [ ~{downSampleReads} -ne 0 ]; then
+                 if [[ ~{output_suffix} == "fastq" ]]; then 
+                     head -n $((4 * ~{downSampleReads}))   ~{fastq1}  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
+                     head -n $((4 * ~{downSampleReads}))   ~{fastq2}  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+                 else
+                     zcat ~{fastq1} | head -n $((4 * ~{downSampleReads})) | gzip  > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix}
+                     zcat ~{fastq2} | head -n $((4 * ~{downSampleReads})) | gzip  > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+                 fi               
+                 echo "FINAL_READS=~{downSampleReads}" > ~{outputFileNamePrefix}.downSample.metrics
+             else 
+                 echo "when downSampleMethod is top_reads, downSampleReads needs provided" >&2
+                 exit 1
+             fi
+ 
+         elif [ ~{downSampleTool} = "seqtk" ]; then
+             #if both downSampleReads and downSampleRatio provided then will use downSampleReads
+             if [ ~{downSampleReads} != 0 ]; then
+                 downSampleFactor=~{downSampleReads}
+             elif (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
+                 downSampleFactor=~{downSampleRatio}
+             else
+                 echo "downSampleReads or downSampleRatio need provided" >&2
+                 exit 1
+             fi
+ 
+             if [[ ~{output_suffix} == "fastq" ]]; then 
+                 seqtk sample -s${seed} ~{fastq1} ${downSampleFactor} > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 
+                 echo "FINAL_READS=$(cat ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} | awk '{c++} END {print c/4}')" > ~{outputFileNamePrefix}.downSample.metrics
+                 seqtk sample -s${seed} ~{fastq2} ${downSampleFactor} > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+             else
+                 seqtk sample -s${seed} ~{fastq1} ${downSampleFactor} | gzip > ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 
+                 echo "FINAL_READS=$(zcat ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} | awk '{c++} END {print c/4}')" >  ~{outputFileNamePrefix}.downSample.metrics
+                 seqtk sample -s${seed} ~{fastq2} ${downSampleFactor} | gzip > ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+             fi
+ 
+         elif [ ~{downSampleTool} = "seqkit" ]; then
+             #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
+             if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
+                 seqkit sample ~{fastq1} -p ~{downSampleRatio} -s ${seed} -2 -o ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 2>&1 | tee ~{outputFileNamePrefix}.downSample.metrics | grep -o "[0-9]* sequences outputted" | awk '{print "FINAL_READS="$1}' >> ~{outputFileNamePrefix}.downSample.metrics
+                 seqkit sample ~{fastq2} -p ~{downSampleRatio} -s ${seed} -2 -o ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+ 
+             elif [ ~{downSampleReads} -ne 0 ]; then
+                 seqkit sample -p 0.2 ~{fastq1} -s ${seed} | seqkit head -n ~{downSampleReads} -o ~{outputFileNamePrefix}.downSampledFastq1.~{output_suffix} 
+                 seqkit sample -p 0.2 ~{fastq2} -s ${seed} | seqkit head -n ~{downSampleReads} -o ~{outputFileNamePrefix}.downSampledFastq2.~{output_suffix}
+                 echo "FINAL_READS=~{downSampleReads}" > ~{outputFileNamePrefix}.downSample.metrics
+             else
+                 echo "downSampleReads or downSampleRatio need provided" >&2
+                 exit 1
+             fi
+         fi
+ ```
+ ```
+         set -euo pipefail
+         valid_downSampleTool=("samtools", "picard")
+         if [[ ! " ${valid_downSampleTool[@]} " =~  ~{downSampleTool} ]]; then
+             echo "valid downSampleTool values are samtools or picard for bam dowmsampling" >&2
+             exit 1
+         fi
+         if [[ ~{downSampleMethod} != "random" ]]; then
+             echo "valid downSampleMethod for bam downsampling is random" >&2
+             exit 1
+         fi
+         if [ ~{randomSampleSeed} != 0 ]; then
+                 seed=~{randomSampleSeed}
+             else
+                 seed=42
+         fi
+         
+         if [ ~{downSampleTool} = "samtools" ]; then
+             #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
+             if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
+                 downSampleFactor=~{downSampleRatio}
+             elif [ ~{downSampleReads} != 0 ]; then
+                 TOTAL_READS=$(samtools view -c ~{bam})
+                 downSampleFactor=$(echo "scale=6; ~{downSampleReads} / $TOTAL_READS" | bc)
+             else
+                 echo "downSampleReads or downSampleRatio need provided" >&2
+                 exit 1
+             fi
+             samtools view -s ${downSampleFactor} -b ~{bam} -o downsampled.bam
+             echo "TOTAL_READS=$(samtools view -c downsampled.bam)" > ~{outputFileNamePrefix}.downsample.metrics
+ 
+             if [ ~{doSorting} = true ]; then
+                 samtools sort downsampled.bam -o ~{outputFileNamePrefix}.downsampled.bam
+             fi
+             if [ ~{createIndex} = true ]; then
+                 samtools index ~{outputFileNamePrefix}.downsampled.bam
+             fi
+ 
+         elif [ ~{downSampleTool} = "picard" ]; then
+             #if both downSampleReads and downSampleRatio provided then will use downSampleRatio
+             if (( $(echo "~{downSampleRatio} != 0" | bc -l) )); then
+                 downSampleFactor=~{downSampleRatio}
+             elif [ ~{downSampleReads} != 0 ]; then
+                 TOTAL_READS=$(samtools view -c ~{bam})
+                 downSampleFactor=$(echo "scale=6; ~{downSampleReads} / $TOTAL_READS" | bc)
+             else
+                 echo "downSampleReads or downSampleRatio need provided" >&2
+                 exit 1
+             fi
+             export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
+             java -jar ${PICARD_ROOT}/picard.jar DownsampleSam \
+             -I ~{bam} \
+             -O downsampled.bam \
+             -P ${downSampleFactor} \
+             --RANDOM_SEED ${seed} \
+             --CREATE_INDEX false \
+             --VALIDATION_STRINGENCY SILENT \
+             --METRICS_FILE ~{outputFileNamePrefix}.downsample.metrics
+ 
+             if [ ~{doSorting} = true ]; then
+                 java -jar ${PICARD_ROOT}/picard.jar SortSam \
+                 -I downsampled.bam \
+                 -O ~{outputFileNamePrefix}.downsampled.bam \
+                 --SORT_ORDER coordinate
+             fi
+             if [ ~{createIndex} = true ]; then
+                 java -jar ${PICARD_ROOT}/picard.jar BuildBamIndex \
+                 -I ~{outputFileNamePrefix}.downsampled.bam
+                 mv ~{outputFileNamePrefix}.downsampled.bai ~{outputFileNamePrefix}.downsampled.bam.bai
+             fi
+         fi
+         if [ ~{checkCoverage} = true ]; then
+                 java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
+                 -I ~{outputFileNamePrefix}.downsampled.bam \
+                 -O coverage_metrics \
+                 -R ~{refFasta}
+ 
+             cat coverage_metrics >>  ~{outputFileNamePrefix}.downsample.metrics
+         fi
+ ```
+ ```
+         set -euo pipefail
+ 
+         export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
+         java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
+                 -I ~{bam} \
+                 -O coverage_metrics \
+                 -R ~{refFasta}
+ 
+             mean_cov=$(cat coverage_metrics | grep -A 2 '## METRICS CLASS' | tail -n 1 | awk '{print $2}')
+             target_cov=$(printf "%.10f" ~{targetCoverage})
+             downSampleRatio=$(echo "$target_cov / $mean_cov" | bc -l)
+             echo $downSampleRatio > downSampleRatio.txt
+   >>>
+ ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
 
