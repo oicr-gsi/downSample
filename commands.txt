@@ -3,9 +3,8 @@ This section lists command(s) run by downSample workflow
 
 * Running downSample
 
-
 ```
-        valid_downSampleTool=("seqtk/1.3" "seqkit/2.3.1" "")
+        valid_downSampleTool=("seqtk" "seqkit" "")
         valid_downSampleMethod=("random" "top_reads")
 
         is_valid=false
@@ -163,3 +162,17 @@ This section lists command(s) run by downSample workflow
             cat coverage_metrics >>  ~{outputFileNamePrefix}.downsample.metrics
         fi
 ```
+```
+        set -euo pipefail
+
+        export JAVA_OPTS="-Xmx$(echo "scale=0; ~{memory} * 0.8 / 1" | bc)G"
+        java -jar ${PICARD_ROOT}/picard.jar CollectWgsMetrics \
+                -I ~{bam} \
+                -O coverage_metrics \
+                -R ~{refFasta}
+
+            mean_cov=$(cat coverage_metrics | grep -A 2 '## METRICS CLASS' | tail -n 1 | awk '{print $2}')
+            target_cov=$(printf "%.10f" ~{targetCoverage})
+            downSampleRatio=$(echo "$target_cov / $mean_cov" | bc -l)
+            echo $downSampleRatio > downSampleRatio.txt
+  >>>
