@@ -4,7 +4,7 @@
             "downSample.inputFastq": {
                 "fastq1":  {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.1.fastq.gz",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.val.1.fastq.gz",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -16,7 +16,7 @@
                     }, 
                 "fastq2": {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.2.fastq.gz",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.val.2.fastq.gz",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -28,7 +28,7 @@
                     }
             },
             "downSample.inputBam": null,
-            "downSample.outputFileNamePrefix": "PCSI0022C.val",
+            "downSample.outputFileNamePrefix": "PCSI.val",
             "downSample.reference": "hg19",
             "downSample.downSampleTool": "seqtk",
             "downSample.downSampleMethod": "random",
@@ -103,7 +103,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_seqtk_test.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_metrics/workflow_test_01.metrics",
                 "type": "script"
             }
         ]
@@ -113,7 +113,7 @@
             "downSample.inputFastq": {
                 "fastq1":  {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.1.fastq.gz",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.val.1.fastq.gz",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -125,7 +125,7 @@
                     }, 
                 "fastq2": {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.2.fastq.gz",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.val.2.fastq.gz",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -137,7 +137,7 @@
                     }
             },
             "downSample.inputBam": null,
-            "downSample.outputFileNamePrefix": "PCSI0022C.val",
+            "downSample.outputFileNamePrefix": "PCSI.val",
             "downSample.reference": "hg19",
             "downSample.downSampleTool": "seqkit",
             "downSample.downSampleMethod": "random",
@@ -212,7 +212,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_seqkit_test.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_metrics/workflow_test_02.metrics",
                 "type": "script"
             }
         ]
@@ -222,7 +222,7 @@
             "downSample.inputFastq": {
                 "fastq1":  {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.1.fastq.gz",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.val.1.fastq.gz",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -234,7 +234,7 @@
                     }, 
                 "fastq2": {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bwamem/input_data/PCSI0022C.val.2.fastq.gz",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.val.2.fastq.gz",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -246,7 +246,7 @@
                     }
             },
             "downSample.inputBam": null,
-            "downSample.outputFileNamePrefix": "PCSI0022C.val",
+            "downSample.outputFileNamePrefix": "PCSI.val",
             "downSample.reference": "hg19",
             "downSample.downSampleTool": "",
             "downSample.downSampleMethod": "top_reads",
@@ -321,7 +321,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_top_reads_test.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_metrics/workflow_test_03.metrics",
                 "type": "script"
             }
         ]
@@ -331,7 +331,7 @@
             "downSample.inputBam":  {
                  "bam": {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.bam",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -343,7 +343,7 @@
                     }, 
                 "bamIndex": {
                         "contents": {
-                            "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
+                            "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.bam.bai",
                             "externalIds": [
                                 {
                                     "id": "TEST",
@@ -355,7 +355,7 @@
                     }
             },
             "downSample.inputFastq": null,
-            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19_picard",
+            "downSample.outputFileNamePrefix": "neat_test",
             "downSample.reference": "hg19",
             "downSample.downSampleTool": "picard",
             "downSample.downSampleMethod": "random",
@@ -430,7 +430,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_picard_test.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_metrics/workflow_test_04.metrics",
                 "type": "script"
             }
         ]
@@ -440,7 +440,7 @@
             "downSample.inputBam":  {
                 "bam": {
                        "contents": {
-                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
+                           "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.bam",
                            "externalIds": [
                                {
                                    "id": "TEST",
@@ -452,7 +452,7 @@
                    }, 
                "bamIndex": {
                        "contents": {
-                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
+                           "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.bam.bai",
                            "externalIds": [
                                {
                                    "id": "TEST",
@@ -464,7 +464,7 @@
                    }
             },
             "downSample.inputFastq": null,
-            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19",
+            "downSample.outputFileNamePrefix": "neat_test",
             "downSample.reference": "hg19",
             "downSample.downSampleTool": "samtools",
             "downSample.downSampleMethod": "random",
@@ -539,7 +539,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_samtools_test.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_metrics/workflow_test_05.metrics",
                 "type": "script"
             }
         ]
@@ -549,7 +549,7 @@
             "downSample.inputBam":  {
                 "bam": {
                        "contents": {
-                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam",
+                           "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.bam",
                            "externalIds": [
                                {
                                    "id": "TEST",
@@ -561,7 +561,7 @@
                    }, 
                "bamIndex": {
                        "contents": {
-                           "configuration": "/.mounts/labs/gsi/testdata/bamqc/input_data/bamQC_test_with_downsample/neat_5x_EX_hg19_chr21.bam.bai",
+                           "configuration": "/.mounts/labs/gsi/testdata/downSample/test_inputs/Test.bam.bai",
                            "externalIds": [
                                {
                                    "id": "TEST",
@@ -573,7 +573,7 @@
                    }
             },
             "downSample.inputFastq": null,
-            "downSample.outputFileNamePrefix": "neat_5x_EX_hg19",
+            "downSample.outputFileNamePrefix": "neat_test",
             "downSample.reference": "hg19",
             "downSample.downSampleTool": "samtools",
             "downSample.downSampleMethod": "random",
@@ -648,7 +648,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_expectation/downSample_target_coverage_test.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/downSample/output_metrics/workflow_test_06.metrics",
                 "type": "script"
             }
         ]
